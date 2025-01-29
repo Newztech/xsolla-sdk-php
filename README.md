@@ -224,3 +224,66 @@ Please read our [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of co
 * [Developer Documentation](http://developers.xsolla.com)
 * [System Status](http://status.xsolla.com)
 * [Support](mailto:integration@xsolla.com)
+
+## Nginx Configuration with Reverse Proxy
+
+To expose your API at `grindinggear.api.luam.tech` through Nginx and forward traffic to the Docker container running on port **9000**, follow these steps:
+
+### 1. Install Nginx and Certbot
+```bash
+sudo apt install nginx
+sudo apt install certbot python3-certbot-nginx
+```
+
+### 2. Create the Nginx site configuration
+```bash
+sudo nano /etc/nginx/sites-available/api
+```
+
+### 3. Add the following configuration:
+```nginx
+server {
+    listen 80;
+    server_name grindinggear.api.luam.tech;
+    
+    location / {
+        proxy_pass http://localhost:9000;
+        proxy_set_header HOST $host;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    }
+}
+```
+
+### 4. Enable the configuration and restart Nginx
+```bash
+sudo ln -s /etc/nginx/sites-available/api /etc/nginx/sites-enabled/api
+sudo systemctl restart nginx
+```
+
+### 5. Verify the Nginx configuration
+```bash
+sudo nginx -t
+```
+If everything is correct, you should see:
+```
+nginx: the configuration file /etc/nginx/nginx.conf syntax is ok
+nginx: configuration file /etc/nginx/nginx.conf test is successful
+```
+
+### 6. Obtain and renew the SSL certificate
+```bash
+sudo certbot --nginx -d grindinggear.api.luam.tech
+```
+
+### 7. Verify that the container is running
+```bash
+docker ps
+```
+If the status appears as **(unhealthy)**, check the container logs:
+```bash
+docker logs xsolla-sdk-php
+```
+
+With this configuration, Nginx will act as a reverse proxy for your API, making it accessible through HTTP.
