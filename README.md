@@ -82,6 +82,32 @@ The SDK includes Docker support for easy deployment and development. To get star
 
 The SDK will be available at `http://localhost:9000`.
 
+You can check the container status using:
+```bash
+docker ps
+```
+
+Example output:
+```
+CONTAINER ID   IMAGE            COMMAND                  CREATED          STATUS                            PORTS      NAMES
+91b72b0574c7   xsolla-sdk-php   "docker-php-entrypoi…"   12 seconds ago   Up 4 seconds (health: starting)   9000/tcp   xsolla-sdk-php
+```
+
+The health status indicators help you monitor the container's state:
+* `(health: starting)`: Container is initializing
+* `(healthy)`: Container is running properly
+* `(unhealthy)`: Container has failed health checks
+
+### Healthcheck Benefits
+
+The implemented healthcheck mechanism provides several advantages:
+* Automatic monitoring of PHP-FPM service status
+* Early detection of service failures
+* Prevention of traffic routing to malfunctioning containers
+* Facilitates automatic recovery and failover
+* Enables container orchestration platforms to make informed scheduling decisions
+* Provides visibility into container health without manual intervention
+
 Docker environment features:
 * PHP-FPM 7.3 (configurable via build args)
 * Built-in health monitoring
