@@ -1,0 +1,22 @@
+version: "3.8"
+
+services:
+  xsolla-sdk-php:
+    image: xsolla-sdk-php
+    container_name: xsolla-sdk-php
+    build:
+      context: .
+      args:
+        PHP_VERSION: "7.3"
+    environment:
+      MERCHANT_ID: "your_merchant_id"
+      API_KEY: "your_api_key"
+      PROJECT_SECRET_KEY: "your_project_secret_key"
+    volumes:
+      - .:/app
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "http://localhost:9000"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
