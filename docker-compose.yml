@@ -8,10 +8,8 @@ services:
       context: .
       args:
         PHP_VERSION: "7.3"
-    environment:
-      MERCHANT_ID: "your_merchant_id"
-      API_KEY: "your_api_key"
-      PROJECT_SECRET_KEY: "your_project_secret_key"
+    env_file:
+      - .env
     volumes:
       - .:/app
     restart: unless-stopped
