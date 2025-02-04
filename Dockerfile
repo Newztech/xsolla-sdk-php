@@ -1,5 +1,5 @@
 # Stage 1: Install dependencies and Composer
-ARG PHP_VERSION=7.3
+ARG PHP_VERSION=8.0
 FROM php:${PHP_VERSION}-cli-alpine AS builder
 
 # Install required dependencies to compile PHP extensions
